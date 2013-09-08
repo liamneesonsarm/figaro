@@ -9,9 +9,9 @@ describe Figaro do
     end
 
     it "allows access to a particular environment" do
-      Figaro.stub(:env).with("development").
+      Figaro.stub(:env).with("development", nil).
         and_return(Figaro::Env.from("HELLO" => "developers"))
-      Figaro.stub(:env).with("production").
+      Figaro.stub(:env).with("production", nil).
         and_return(Figaro::Env.from("HELLO" => "world"))
 
       expect(Figaro.vars("development")).to eq("HELLO=developers")

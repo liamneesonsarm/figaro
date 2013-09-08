@@ -6,27 +6,28 @@ require "figaro/tasks"
 module Figaro
   extend self
 
-  def vars(custom_environment = nil)
-    env(custom_environment).map { |key, value|
+  def vars(custom_environment = nil, file = nil)
+    env(custom_environment, file).map { |key, value|
       "#{key}=#{Shellwords.escape(value)}"
     }.sort.join(" ")
   end
 
-  def env(custom_environment = nil)
+  def env(custom_environment = nil, file = nil)
     environment = (custom_environment || self.environment).to_s
-    Figaro::Env.from(stringify(flatten(raw).merge(raw.fetch(environment, {}))))
+    Figaro::Env.from(stringify(flatten(raw(file)).merge(raw.fetch(environment, {}))))
   end
 
-  def raw
-    @raw ||= yaml && YAML.load(yaml) || {}
+  def raw(file = nil)
+    @raw ||= yaml(file) && YAML.load(yaml(file)) || {}
   end
 
-  def yaml
-    @yaml ||= File.exist?(path) ? ERB.new(File.read(path)).result : nil
+  def yaml(file = nil)
+    @yaml ||= File.exist?(path(file)) ? ERB.new(File.read(path(file))).result : nil
   end
 
-  def path
-    @path ||= Rails.root.join("config", "application.yml")
+  def path(file)
+    file ||= "application.yml"
+    @path ||= Rails.root.join("config", file)
   end
 
   def environment

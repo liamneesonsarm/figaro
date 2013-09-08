@@ -1,6 +1,6 @@
 namespace :figaro do
   desc "Configure Heroku according to application.yml"
-  task :heroku, [:app] => :environment do |_, args|
-    Figaro::Tasks::Heroku.new(args[:app]).invoke
+  task :heroku, [:app, :file] => :environment do |_, args|
+    Figaro::Tasks::Heroku.new(args[:app], args[:file]).invoke
   end
 end
