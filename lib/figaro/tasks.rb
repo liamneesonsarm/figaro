@@ -2,13 +2,13 @@ require "bundler"
 
 module Figaro
   module Tasks
-    class Heroku < Struct.new(:app)
+    class Heroku < Struct.new(:app, :file)
       def invoke
         heroku("config:set #{vars}")
       end
 
       def vars
-        Figaro.vars(environment)
+        Figaro.vars(environment, file)
       end
 
       def environment

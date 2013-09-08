@@ -17,7 +17,7 @@ module Figaro::Tasks
     describe "#vars" do
       it "returns Figaro's vars for Heroku's environment" do
         heroku.stub(:environment => "staging")
-        Figaro.stub(:vars).with("staging").and_return("FOO=bar")
+        Figaro.stub(:vars).with("staging", nil).and_return("FOO=bar")
 
         expect(heroku.vars).to eq("FOO=bar")
       end
@@ -55,14 +55,14 @@ OUT
     subject(:heroku) { mock(:heroku) }
 
     it "configures Heroku" do
-      Figaro::Tasks::Heroku.stub(:new).with(nil).and_return(heroku)
+      Figaro::Tasks::Heroku.stub(:new).with(nil, nil).and_return(heroku)
       heroku.should_receive(:invoke).once
 
       task.invoke
     end
 
     it "configures a specific Heroku app" do
-      Figaro::Tasks::Heroku.stub(:new).with("my-app").and_return(heroku)
+      Figaro::Tasks::Heroku.stub(:new).with("my-app", nil).and_return(heroku)
       heroku.should_receive(:invoke).once
 
       task.invoke("my-app")
